@@ -6,9 +6,9 @@ hidden tests, escrow, GitHub API or hosted service.
 
 ## Installation
 
-Python 3.12+ after the first verified PyPI release:
+With Python 3.12 or newer, activate a virtual environment and install the published v0.1.1 GitHub Release wheel. The digest pins the downloaded file. The MCP extra includes the local stdio server.
 
-    python -m pip install "resultbond-verifier[mcp]"
+    python -m pip install "resultbond-verifier[mcp] @ https://github.com/valtris/resultbond-verifier/releases/download/v0.1.1/resultbond_verifier-0.1.1-py3-none-any.whl#sha256=446aa98af0cc97807e4530d7cd9c34e90d8c60120a3f6a9af2d19513bd2e5ffd"
 
 From a trusted local checkout for development:
 
@@ -17,7 +17,9 @@ From a trusted local checkout for development:
 
 Check a locally saved receipt and a root-signed keyset:
 
-    resultbond-verify receipt.json --keyset resultbond-keys.json --min-serial 3
+    resultbond-verify receipt.json --keyset resultbond-keys.json
+
+If you have a previously trusted minimum keyset serial, add `--min-serial` with that value. Keep the highest trusted serial when you update. The signed example receipts on the website use demonstration signers and report `UNTRUSTED`.
 
 Exit code 0 means a trusted signed outcome (it may be FAIL or INCONCLUSIVE),
 1 = signature valid but signer untrusted, 2 = invalid or unreadable evidence.
