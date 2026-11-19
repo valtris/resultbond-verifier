@@ -1,0 +1,4 @@
+ResultBond Verifier
+Copyright 2026 ResultBond contributors
+
+The Apache-2.0 license applies only to the standalone ResultBond Verifier distribution and the files included in its source package. It does not license the private ResultBond Core, Judge, runner, or proprietary server implementation.

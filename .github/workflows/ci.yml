@@ -1,0 +1,52 @@
+name: ResultBond Verifier CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Public verifier / Python ${{ matrix.python }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install verifier and test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[mcp]" ruff mypy build twine
+      - name: Static checks
+        run: |
+          ruff check src tests scripts
+          mypy --strict --follow-imports=skip src
+      - name: Real offline cryptographic tests and local MCP transport
+        run: python -m unittest discover -s tests -v
+      - name: Build and verify distribution
+        run: |
+          python -m build --wheel --outdir dist
+          python -m twine check dist/*.whl
+          python scripts/audit_wheel.py dist/*.whl
+      - name: Reject reliance on the private ResultBond Core
+        run: |
+          python -m venv /tmp/standalone-verifier
+          /tmp/standalone-verifier/bin/python -m pip install dist/*.whl "mcp>=2.3,<3"
+          cd /tmp
+          /tmp/standalone-verifier/bin/python -c 'import importlib.util, resultbond_verifier; assert importlib.util.find_spec("resultbond") is None; assert importlib.util.find_spec("resultbond_runner") is None; print("standalone verifier OK")'
+      - uses: actions/upload-artifact@v4
+        if: matrix.python == '3.12'
+        with:
+          name: resultbond-verifier-wheel
+          path: dist/*.whl
+          retention-days: 7

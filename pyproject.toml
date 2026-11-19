@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resultbond-verifier"
+version = "0.1.0"
+description = "Read-only cryptographic Proof Receipt verifier and MCP bridge for ResultBond"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.12"
+dependencies = ["cryptography>=46,<47"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Security :: Cryptography",
+]
+
+[project.optional-dependencies]
+mcp = ["mcp>=2.3,<3"]
+
+[project.scripts]
+resultbond-verify = "resultbond_verifier.cli:main"
+resultbond-verifier-mcp = "resultbond_verifier.mcp_server:main"
+
+[project.urls]
+Homepage = "https://resultbond.com"
+Documentation = "https://resultbond.com/docs"
+Source = "https://github.com/valtris/resultbond-verifier"
+Issues = "https://github.com/valtris/resultbond-verifier/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["resultbond_verifier", "resultbond_verifier.*"]
+exclude = ["resultbond", "resultbond_runner"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
