@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "resultbond-verifier"
-version = "0.1.0"
+version = "0.1.1"
 description = "Read-only cryptographic Proof Receipt verifier and MCP bridge for ResultBond"
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.12"
-dependencies = ["cryptography>=46,<47"]
+dependencies = ["cryptography>=50.0.2,<51"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",

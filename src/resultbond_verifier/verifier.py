@@ -274,6 +274,15 @@ def _validate_receipt(raw: Any) -> tuple[dict[str, Any], str]:
         raise VerificationError("invalid settlement")
     _int(settlement["payment_atomic"])
     _int(settlement["stipend_atomic"])
+    # A cryptographically authentic but internally contradictory PASS must
+    # never be promoted to a certified success. This mirrors Core policy.py.
+    if payload["outcome"] == "PASS" and (
+        payload["reason_code"] != "ALL_CHECKS_PASS"
+        or settlement["payment_action"] != "RELEASE_PAYMENT"
+        or settlement["requires_manual_review"]
+        or settlement["stipend_atomic"] != 0
+    ):
+        raise VerificationError("signed PASS conflicts with policy")
     _b64(raw["evaluator_public_key_b64url"], 32)
     if _sha(payload) != raw["payload_digest"]:
         raise VerificationError("receipt digest mismatch")

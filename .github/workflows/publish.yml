@@ -8,7 +8,7 @@ on:
         type: string
         description: "Exactly the approved version from pyproject.toml"
         required: true
-        default: "0.1.0"
+        default: "0.1.1"
       publish:
         type: boolean
         description: "UPLOAD to public PyPI? Leave false for dry run."
@@ -28,10 +28,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
       - name: Check release version and signed-off tag
@@ -54,14 +54,15 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          python -m pip install -e ".[mcp]" build twine ruff mypy
+          python -m pip install -e ".[mcp]" build twine ruff mypy pip-audit
           ruff check src tests scripts
           mypy --strict --follow-imports=skip src
           python -m unittest discover -s tests -v
+          python -m pip_audit --path "$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
           python -m build --wheel --outdir dist
           python -m twine check dist/*.whl
           python scripts/audit_wheel.py --version "$VERSION" dist/*.whl
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: resultbond-verifier-release-wheel
           path: dist/*.whl
@@ -89,9 +90,9 @@ jobs:
             echo "PyPI publication remains disabled; missing independent owner approval." >&2
             exit 1
           fi
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: resultbond-verifier-release-wheel
           path: dist
       - name: Publish ONLY the vetted public verifier using PyPI OIDC
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # release/v1
