@@ -54,6 +54,9 @@ def synthetic_proofs(
     serial: int = 17,
     revoked: bool = False,
     outcome: str = "PASS",
+    reason_code: str = "ALL_CHECKS_PASS",
+    payment_action: str = "RELEASE_PAYMENT",
+    manual_review: bool = False,
 ) -> tuple[str, str, str, str]:
     now = datetime.now(UTC)
     root = Ed25519PrivateKey.generate()
@@ -74,13 +77,13 @@ def synthetic_proofs(
         "candidate_submission_digest": digest,
         "decision_digest": digest,
         "outcome": outcome,
-        "reason_code": "ALL_CHECKS_PASS",
+        "reason_code": reason_code,
         "settlement": {
             "currency": "USDC",
-            "payment_action": "RELEASE_PAYMENT",
+            "payment_action": payment_action,
             "payment_atomic": 0,
             "stipend_atomic": 0,
-            "requires_manual_review": False,
+            "requires_manual_review": manual_review,
         },
         "policy_id": "synthetic:policy",
         "issued_at": stamp(now),
