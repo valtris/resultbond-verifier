@@ -29,7 +29,7 @@ MAX_WHEEL = 64 * 1024
 MAX_FILE = 45 * 1024
 
 
-def audit(wheel: Path, version: str = "0.1.1") -> dict[str, int | str]:
+def audit(wheel: Path, version: str = "0.1.2") -> dict[str, int | str]:
     if not re.fullmatch(r"\d+\.\d+\.\d+", version):
         raise ValueError("invalid version")
     if wheel.name != f"resultbond_verifier-{version}-py3-none-any.whl":
@@ -98,7 +98,7 @@ def audit(wheel: Path, version: str = "0.1.1") -> dict[str, int | str]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("wheel", type=Path)
-    parser.add_argument("--version", default="0.1.1")
+    parser.add_argument("--version", default="0.1.2")
     args = parser.parse_args()
     try:
         report = audit(args.wheel, args.version)

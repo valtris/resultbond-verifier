@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "resultbond-verifier"
-version = "0.1.1"
+version = "0.1.2"
 description = "Read-only cryptographic Proof Receipt verifier and MCP bridge for ResultBond"
 readme = "README.md"
 license = "Apache-2.0"
