@@ -46,6 +46,7 @@ def create_server() -> Any:
         root-signature, exact key roles, serial and revocations. Receipt JSON
         stays a string: its strict parser must catch duplicate field names.
         """
+        keyset_text: str | None
         if isinstance(keyset_json, dict):
             try:
                 keyset_text = json.dumps(keyset_json, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
