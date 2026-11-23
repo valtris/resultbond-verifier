@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from typing import Any
 
@@ -33,12 +34,28 @@ def create_server() -> Any:
 
     @server.tool()  # type: ignore[untyped-decorator]
     def verify_receipt_tool(
-        receipt_json: str, keyset_json: str | None = None, minimum_keyset_serial: int = 1
+        receipt_json: str,
+        keyset_json: dict[str, Any] | str | None = None,
+        minimum_keyset_serial: int = 1,
     ) -> dict[str, Any]:
-        """Verify a receipt and an optional root-signed evaluator keyset."""
+        """Verify read-only evidence; accept MCP's JSON-decoded keyset object.
+
+        Some MCP clients/servers decode JSON-looking string arguments to a
+        JSON object before Pydantic validates the tool schema. Accepting that
+        object is safe only because the verifier still validates the
+        root-signature, exact key roles, serial and revocations. Receipt JSON
+        stays a string: its strict parser must catch duplicate field names.
+        """
+        if isinstance(keyset_json, dict):
+            try:
+                keyset_text = json.dumps(keyset_json, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+            except (TypeError, ValueError, OverflowError):
+                keyset_text = "{}"  # Fail closed; never silently skip invalid provided evidence.
+        else:
+            keyset_text = keyset_json
         return verify_receipt(
             receipt_json,
-            keyset_json,
+            keyset_text,
             minimum_keyset_serial=minimum_keyset_serial,
         )
 
