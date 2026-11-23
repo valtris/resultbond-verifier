@@ -12,7 +12,7 @@ Verify its published SHA-256 before installing. The local MCP extra is optional,
 and the Python package is read-only; it cannot issue a Judge PASS.
 
     python3.12 -m venv .venv
-    . .venv/bin/activate   # Windows: .venv\\Scripts\\activate
+    . .venv/bin/activate   # Windows: .venv\Scripts\activate
     python -m pip install /path/to/resultbond_verifier-0.1.2-py3-none-any.whl
 
 From a trusted local checkout for development:
