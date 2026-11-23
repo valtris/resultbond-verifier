@@ -6,9 +6,14 @@ hidden tests, escrow, GitHub API or hosted service.
 
 ## Installation
 
-With Python 3.12 or newer, activate a virtual environment and install the published v0.1.1 GitHub Release wheel. The digest pins the downloaded file. The MCP extra includes the local stdio server.
+With Python 3.12+, create a virtual environment and download the reviewed wheel from
+[ResultBond Verifier GitHub Releases](https://github.com/valtris/resultbond-verifier/releases).
+Verify its published SHA-256 before installing. The local MCP extra is optional,
+and the Python package is read-only; it cannot issue a Judge PASS.
 
-    python -m pip install "resultbond-verifier[mcp] @ https://github.com/valtris/resultbond-verifier/releases/download/v0.1.1/resultbond_verifier-0.1.1-py3-none-any.whl#sha256=446aa98af0cc97807e4530d7cd9c34e90d8c60120a3f6a9af2d19513bd2e5ffd"
+    python3.12 -m venv .venv
+    . .venv/bin/activate   # Windows: .venv\Scripts\activate
+    python -m pip install /path/to/resultbond_verifier-0.1.2-py3-none-any.whl
 
 From a trusted local checkout for development:
 
